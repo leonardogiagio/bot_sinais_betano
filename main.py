@@ -55,8 +55,6 @@ def main():
                 break
 
             
-            print(item.text)
-     
             count_five_in_five = count_five_in_five + 1
             try:
                 if "(Esports)" not in item.text:                    
@@ -74,9 +72,13 @@ def main():
                     competition = item.find_elements(By.CLASS_NAME, 'tw-cursor-pointer')[0].text
                     match_time_match = re.search(r'(\d+:\d+)', item.text)
                     match_time = match_time_match.group(1) if match_time_match else None
+
                     block_result_game = item.find_element(By.CSS_SELECTOR, 'div[data-qa="score"]')
                     
                     result_game = block_result_game.text.replace('\n', ' x ')
+
+                    if match_time is None:
+                        continue
 
                     minutes_match_time = match_time.split(":")
 
