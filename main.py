@@ -134,7 +134,7 @@ def main():
                     print(message)
                     processed_elements.add(confrontation)
 
-                    # t.send_message(token, chat_id, message)
+                    t.send_message(token, chat_id, message)
                 else:
                     pageRefresh()
                     closePopup()
