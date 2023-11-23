@@ -54,6 +54,9 @@ def main():
                 limparConsole()
                 break
 
+            
+            print(item.text)
+     
             count_five_in_five = count_five_in_five + 1
             try:
                 if "(Esports)" not in item.text:                    
@@ -83,6 +86,8 @@ def main():
                     try:
                         item.click()
                         time.sleep(2)
+                        url_link = driver.execute_script('return arguments[0].querySelector(\'a\');', item).get_attribute("href")
+
                     except StaleElementReferenceException:
                         continue
                     except ElementClickInterceptedException:
@@ -122,12 +127,12 @@ def main():
                         continue
                 
 
-                    message = f'🚨 Alerta de Oportunidade!!! 🚨 \n\n⚽ Jogo: {confrontation} \n🏆 Competição: {competition} \n📈 Odd: {odd} \n🕐 Tempo: {match_time} \n➡ Resultado: {result_game}'
+                    message = f'🚨 Alerta de Oportunidade!!! 🚨 \n\n⚽ Jogo: {confrontation} \n🏆 Competição: {competition} \n📈 Odd: {odd} \n🕐 Tempo: {match_time} \n👉 Resultado: {result_game} \n\n📲 Link: {url_link}'
 
                     print(message)
                     processed_elements.add(confrontation)
 
-                    t.send_message(token, chat_id, message)
+                    # t.send_message(token, chat_id, message)
                 else:
                     pageRefresh()
                     closePopup()
@@ -136,6 +141,7 @@ def main():
                     break
             except StaleElementReferenceException:
                 continue
+            
 
 def passDown(qtdPassDown):
     # driver.execute_script("document.querySelector('.vue-recycle-scroller.direction-vertical:not(.page-mode)').scrollBy(0, 120);")
