@@ -8,7 +8,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import JavascriptException
 import re
 import subprocess
 import os
@@ -55,6 +57,8 @@ def main():
                 break
 
             
+            # print(item.text)
+            
             count_five_in_five = count_five_in_five + 1
             try:
                 if "(Esports)" not in item.text:                    
@@ -80,19 +84,19 @@ def main():
                     if match_time is None:
                         continue
 
+                    """
                     minutes_match_time = match_time.split(":")
 
-                    if(int(minutes_match_time[0]) < 40):
+                    if(int(minutes_match_time[0]) < 30):
                         continue
+                    """
 
                     try:
                         item.click()
                         time.sleep(2)
                         url_link = driver.execute_script('return arguments[0].querySelector(\'a\');', item).get_attribute("href")
 
-                    except StaleElementReferenceException:
-                        continue
-                    except ElementClickInterceptedException:
+                    except (StaleElementReferenceException, ElementClickInterceptedException, ElementNotInteractableException):
                         continue
 
                     tabs = driver.find_elements(By.CLASS_NAME, 'GTM-tab-name')
@@ -148,7 +152,10 @@ def main():
 def passDown(qtdPassDown):
     # driver.execute_script("document.querySelector('.vue-recycle-scroller.direction-vertical:not(.page-mode)').scrollBy(0, 120);")
     script = f"document.querySelector('.vue-recycle-scroller.direction-vertical:not(.page-mode)').scrollBy(0, {qtdPassDown});"
-    driver.execute_script(script)
+    try:
+        driver.execute_script(script)
+    except JavascriptException as e:
+        print('')
     time.sleep(1)
 
 def closePopup():
@@ -160,7 +167,10 @@ def closePopup():
 def pageRefresh():
     driver.refresh()
     time.sleep(3)
-    driver.execute_script("document.querySelector('.vue-recycle-scroller.direction-vertical:not(.page-mode)').scrollTo(0, 0);")
+    try:
+        driver.execute_script("document.querySelector('.vue-recycle-scroller.direction-vertical:not(.page-mode)').scrollTo(0, 0);")
+    except:
+        print('')
 
 def limparConsole():
     subprocess.call('clear' if os.name == 'posix' else 'cls', shell=True)
